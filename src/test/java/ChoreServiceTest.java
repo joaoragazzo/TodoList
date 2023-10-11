@@ -325,8 +325,52 @@ public class ChoreServiceTest {
         String expectedOutput = "Descrição: Chore #01 Deadline: " + LocalDate.now().plusDays(1) + " Status: Incompleta\n" +
                                 "Descrição: Chore #02 Deadline: " + LocalDate.now().plusDays(2) + " Status: Completa\n";
 
+        assertEquals(expectedOutput, service.printChores());
 
     }
+
+    @Test
+    @DisplayName("#editChore > Editing only a description of a valid chore")
+    void editChoreEditingADescriptionOfAValidChore() {
+        ChoreService service = new ChoreService();
+
+        service.addChore("Chore #01", LocalDate.now().plusDays(1));
+
+        service.editChore("Chore #01", LocalDate.now().plusDays(1), "Chore Edited");
+
+        assertDoesNotThrow(
+                () -> service.getChore("Chore Edited", LocalDate.now().plusDays(1))
+        );
+    }
+
+    @Test
+    @DisplayName("#editChore > Editing only a deadline of a valid chore")
+    void editChoreEditingADeadlineOfAValidChore() {
+        ChoreService service = new ChoreService();
+
+        service.addChore("Chore #01", LocalDate.now().plusDays(1));
+
+        service.editChore("Chore #01", LocalDate.now().plusDays(1), LocalDate.now());
+
+        assertDoesNotThrow(
+                () -> service.getChore("Chore #01", LocalDate.now())
+        );
+    }
+
+    @Test
+    @DisplayName("#editChore > Editing the deadline and description of a valid chore")
+    void editChoreEditingTheDeadlineAndDescriptionOfAValidChore() {
+        ChoreService service = new ChoreService();
+
+        service.addChore("Chore #01", LocalDate.now().plusDays(1));
+        service.editChore("Chore #01", LocalDate.now().plusDays(1),
+                "Chore Edited", LocalDate.now());
+
+        assertDoesNotThrow(
+                () -> service.getChore("Chore Edited", LocalDate.now())
+        );
+    }
+
 }
 
 
