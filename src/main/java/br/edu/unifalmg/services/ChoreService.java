@@ -2,10 +2,7 @@ package br.edu.unifalmg.services;
 
 import br.edu.unifalmg.domain.Chore;
 import br.edu.unifalmg.emumerator.ChoreFilter;
-import br.edu.unifalmg.exception.ChoreDontExistsException;
-import br.edu.unifalmg.exception.DuplicatedChoreException;
-import br.edu.unifalmg.exception.InvalidDeadlineException;
-import br.edu.unifalmg.exception.InvalidDescriptionException;
+import br.edu.unifalmg.exception.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -143,6 +140,48 @@ public class ChoreService {
         }
 
         return output;
+
+    }
+
+    public void editChore(String description, LocalDate deadline, String newDescription) {
+        Chore choreToEdit = this.getChore(description, deadline);
+
+        if (choreToEdit.getIsCompleted())
+            throw new ChoreAlreadyClosed("the chore is already closed.");
+
+        if (description == null || description.isEmpty() || description.isBlank())
+            throw new InvalidDescriptionException("The description cannot be null or empty");
+
+        choreToEdit.setDescription(newDescription);
+    }
+
+    public void editChore(String description, LocalDate deadline, LocalDate newDeadline) {
+        Chore choreToEdit = this.getChore(description, deadline);
+
+        if (choreToEdit.getIsCompleted())
+            throw new ChoreAlreadyClosed("the chore is already closed.");
+
+        if (deadline == null || deadline.isBefore(LocalDate.now()))
+            throw new InvalidDeadlineException("The deadline cannot be null or before the current date");
+
+        choreToEdit.setDeadline(newDeadline);
+    }
+
+    public void editChore(String description, LocalDate deadline, String newDescription, LocalDate newDeadline) {
+
+        Chore choreToEdit = this.getChore(description, deadline);
+
+        if (choreToEdit.getIsCompleted())
+            throw new ChoreAlreadyClosed("the chore is already closed.");
+
+        if (deadline == null || deadline.isBefore(LocalDate.now()))
+            throw new InvalidDeadlineException("The deadline cannot be null or before the current date");
+
+        if (description == null || description.isEmpty() || description.isBlank())
+            throw new InvalidDescriptionException("The description cannot be null or empty");
+
+        choreToEdit.setDeadline(newDeadline);
+        choreToEdit.setDescription(newDescription);
 
     }
 
