@@ -139,7 +139,7 @@ public class ChoreService {
 
             output += "Descrição: " + chore.getDescription() +
                     " Deadline: " + chore.getDeadline() +
-                    " Status: " + status;
+                    " Status: " + status + "\n";
         }
 
         return output;
