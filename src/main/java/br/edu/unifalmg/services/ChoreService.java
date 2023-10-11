@@ -128,4 +128,22 @@ public class ChoreService {
     }
 
 
+    public String printChores() {
+        String output = "";
+        for(Chore chore : this.chores) {
+            String status = "Incompleta";
+
+            if (chore.getIsCompleted()) {
+                status = "Completa";
+            }
+
+            output += "Descrição: " + chore.getDescription() +
+                    " Deadline: " + chore.getDeadline() +
+                    " Status: " + status + "\n";
+        }
+
+        return output;
+
+    }
+
 }

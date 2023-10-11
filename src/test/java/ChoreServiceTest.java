@@ -165,7 +165,7 @@ public class ChoreServiceTest {
                         () -> service.getChore("Chore #1", LocalDate.now().plusDays(1))
                     ),
                 () -> assertDoesNotThrow(
-                        () -> service.getChore("Chore #2", LocalDate.now().plusDays(1))
+                        () -> service.getChore("Chore #2", LocalDate.now().plusDays(2))
                     )
         );
     }
@@ -305,6 +305,27 @@ public class ChoreServiceTest {
                 () -> assertEquals("Chore #01", response.get(0).getDescription()),
                 () -> assertEquals(Boolean.FALSE, response.get(0).getIsCompleted())
         );
+    }
+
+    @Test
+    @DisplayName("#printChores > When the list is empty > Print nothing")
+    void printChoresWhenTheListIsEmptyPrintNothing() {
+        ChoreService service = new ChoreService();
+        assertEquals("", service.printChores());
+    }
+
+    @Test
+    @DisplayName("#printChores > When the list is not empty > Print the chores")
+    void printChoresWhenTheListIsNotEmptyPrintTheChores() {
+        ChoreService service = new ChoreService();
+        service.addChore("Chore #01", LocalDate.now().plusDays(1));
+        service.addChore("Chore #02", LocalDate.now().plusDays(2));
+        service.toggleChore("Chore #02", LocalDate.now().plusDays(2));
+
+        String expectedOutput = "Descrição: Chore #01 Deadline: " + LocalDate.now().plusDays(1) + " Status: Incompleta\n" +
+                                "Descrição: Chore #02 Deadline: " + LocalDate.now().plusDays(2) + " Status: Completa\n";
+
+
     }
 }
 
