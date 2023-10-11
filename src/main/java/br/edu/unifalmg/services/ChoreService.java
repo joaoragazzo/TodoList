@@ -149,7 +149,7 @@ public class ChoreService {
         if (choreToEdit.getIsCompleted())
             throw new ChoreAlreadyClosed("the chore is already closed.");
 
-        if (description == null || description.isEmpty() || description.isBlank())
+        if (newDescription == null || newDescription.isEmpty() || newDescription.isBlank())
             throw new InvalidDescriptionException("The description cannot be null or empty");
 
         choreToEdit.setDescription(newDescription);
@@ -161,7 +161,7 @@ public class ChoreService {
         if (choreToEdit.getIsCompleted())
             throw new ChoreAlreadyClosed("the chore is already closed.");
 
-        if (deadline == null || deadline.isBefore(LocalDate.now()))
+        if (newDeadline == null || newDeadline.isBefore(LocalDate.now()))
             throw new InvalidDeadlineException("The deadline cannot be null or before the current date");
 
         choreToEdit.setDeadline(newDeadline);
@@ -174,10 +174,10 @@ public class ChoreService {
         if (choreToEdit.getIsCompleted())
             throw new ChoreAlreadyClosed("the chore is already closed.");
 
-        if (deadline == null || deadline.isBefore(LocalDate.now()))
+        if (newDeadline == null || newDeadline.isBefore(LocalDate.now()))
             throw new InvalidDeadlineException("The deadline cannot be null or before the current date");
 
-        if (description == null || description.isEmpty() || description.isBlank())
+        if (newDescription == null || newDescription.isEmpty() || newDescription.isBlank())
             throw new InvalidDescriptionException("The description cannot be null or empty");
 
         choreToEdit.setDeadline(newDeadline);
