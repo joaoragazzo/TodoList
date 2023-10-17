@@ -3,7 +3,14 @@ package br.edu.unifalmg.services;
 import br.edu.unifalmg.domain.Chore;
 import br.edu.unifalmg.emumerator.ChoreFilter;
 import br.edu.unifalmg.exception.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -183,6 +190,19 @@ public class ChoreService {
         choreToEdit.setDeadline(newDeadline);
         choreToEdit.setDescription(newDescription);
 
+    }
+
+    public void readData() throws FileNotFoundException {
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDate.class, new LocalDateDeserializer())
+                .create();
+
+        JsonReader reader = new JsonReader(new FileReader("src/main/resources/chores.json"));
+        Type choreListType = new TypeToken<List<Chore>>(){}.getType();
+
+        List<Chore> newChores = gson.fromJson(reader, choreListType);
+
+        this.chores.addAll(newChores);
     }
 
 }
