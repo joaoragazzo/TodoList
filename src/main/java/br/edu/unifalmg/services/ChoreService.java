@@ -192,17 +192,4 @@ public class ChoreService {
 
     }
 
-    public void readData() throws FileNotFoundException {
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDate.class, new LocalDateDeserializer())
-                .create();
-
-        JsonReader reader = new JsonReader(new FileReader("src/main/resources/chores.json"));
-        Type choreListType = new TypeToken<List<Chore>>(){}.getType();
-
-        List<Chore> newChores = gson.fromJson(reader, choreListType);
-
-        this.chores.addAll(newChores);
-    }
-
 }
