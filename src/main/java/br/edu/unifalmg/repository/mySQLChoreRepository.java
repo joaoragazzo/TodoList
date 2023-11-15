@@ -79,6 +79,7 @@ public class mySQLChoreRepository implements ChoreRepository {
                         .description(resultSet.getString("description"))
                         .isCompleted(resultSet.getBoolean("isCompleted"))
                         .deadline(resultSet.getDate("deadline").toLocalDate())
+                        .id(resultSet.getLong("id"))
                         .build();
                 chores.add(chore);
             }
@@ -104,11 +105,12 @@ public class mySQLChoreRepository implements ChoreRepository {
 
         try {
             preparedStatement = connection.prepareStatement(
-                    "INSERT INTO db.chore ('description','isCompleted','deadline') VALUES (?, ?, ?)"
+                    "INSERT INTO db.chore ('description','isCompleted','deadline', '') VALUES (?, ?, ?, ?)"
             );
             preparedStatement.setString(1, chore.getDescription());
             preparedStatement.setBoolean(2, chore.getIsCompleted());
             preparedStatement.setDate(3, Date.valueOf(chore.getDeadline()));
+            preparedStatement.setLong(4, chore.getId());
             int affectedRows = preparedStatement.executeUpdate();
 
             if (affectedRows > 0) {
