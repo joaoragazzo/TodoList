@@ -18,4 +18,6 @@ public class Chore {
 
     private LocalDate deadline;
 
+    private Long id;
+
 }

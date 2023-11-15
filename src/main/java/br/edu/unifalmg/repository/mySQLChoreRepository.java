@@ -79,6 +79,7 @@ public class mySQLChoreRepository implements ChoreRepository {
                         .description(resultSet.getString("description"))
                         .isCompleted(resultSet.getBoolean("isCompleted"))
                         .deadline(resultSet.getDate("deadline").toLocalDate())
+                        .id(resultSet.getLong("id"))
                         .build();
                 chores.add(chore);
             }
@@ -104,11 +105,12 @@ public class mySQLChoreRepository implements ChoreRepository {
 
         try {
             preparedStatement = connection.prepareStatement(
-                    "INSERT INTO db.chore ('description','isCompleted','deadline') VALUES (?, ?, ?)"
+                    "INSERT INTO db.chore ('description','isCompleted','deadline', 'id') VALUES (?, ?, ?, ?)"
             );
             preparedStatement.setString(1, chore.getDescription());
             preparedStatement.setBoolean(2, chore.getIsCompleted());
             preparedStatement.setDate(3, Date.valueOf(chore.getDeadline()));
+            preparedStatement.setLong(4, chore.getId());
             int affectedRows = preparedStatement.executeUpdate();
 
             if (affectedRows > 0) {
@@ -120,6 +122,35 @@ public class mySQLChoreRepository implements ChoreRepository {
         } finally {
             closeConnections();
         }
+        return Boolean.FALSE;
+    }
+
+    @Override
+    public boolean update(Chore chore) {
+        if (!connectToMySQL()) {
+            return Boolean.FALSE;
+        }
+
+        try {
+            preparedStatement = connection.prepareStatement(
+                    "UPDATE db.chore SET description = ?, isCompleted = ?, deadline = ? WHERE id = ?"
+            );
+            preparedStatement.setString(1, chore.getDescription());
+            preparedStatement.setBoolean(2, chore.getIsCompleted());
+            preparedStatement.setDate(3, Date.valueOf(chore.getDeadline()));
+            preparedStatement.setLong(4, chore.getId());
+            int affectedRows = preparedStatement.executeUpdate();
+
+            if (affectedRows > 0) {
+                return Boolean.TRUE;
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Um erro aconteceu: " + e);
+        } finally {
+            closeConnections();
+        }
+
         return Boolean.FALSE;
     }
 

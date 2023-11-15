@@ -3,6 +3,8 @@ package br.edu.unifalmg.services;
 import br.edu.unifalmg.domain.Chore;
 import br.edu.unifalmg.emumerator.ChoreFilter;
 import br.edu.unifalmg.exception.*;
+import br.edu.unifalmg.repository.ChoreRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -15,11 +17,20 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class ChoreService {
 
     private List<Chore> chores;
+    private ObjectMapper mapper;
+    private ChoreRepository repository;
+
+    public ChoreService(ChoreRepository repository) {
+        chores = new ArrayList<>();
+        mapper = new ObjectMapper().findAndRegisterModules();
+        this.repository = repository;
+    }
 
     public ChoreService() {
         chores = new ArrayList<>();
@@ -204,5 +215,15 @@ public class ChoreService {
 
         this.chores.addAll(newChores);
     }
+    
+    public void loadChores() {
+        this.chores = repository.load();
+    }
+
+    public Boolean saveChores() {
+        return repository.saveAll(this.chores);
+    }
+
+    private final Predicate<List<Chore>> isChoreListEmpty = choreList -> choreList.isEmpty();
 
 }
