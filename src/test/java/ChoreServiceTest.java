@@ -4,17 +4,35 @@ import br.edu.unifalmg.exception.ChoreDontExistsException;
 import br.edu.unifalmg.exception.DuplicatedChoreException;
 import br.edu.unifalmg.exception.InvalidDeadlineException;
 import br.edu.unifalmg.exception.InvalidDescriptionException;
+import br.edu.unifalmg.repository.ChoreRepository;
 import br.edu.unifalmg.services.ChoreService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ChoreServiceTest {
+
+    @InjectMocks
+    private ChoreService service;
+
+    @Mock
+    private ChoreRepository repository;
+
+    @BeforeEach
+    public void setup() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     @DisplayName("#addChore > When the description is invalid > Throw Exception")
@@ -370,6 +388,35 @@ public class ChoreServiceTest {
         assertDoesNotThrow(
                 () -> service.getChore("Chore Edited", LocalDate.now())
         );
+    }
+
+    @Test
+    @DisplayName("#loadChores > When the chores are loaded > Update the chore list")
+    void loadChoresWhenTheChoresAreLoadedUpdateTheChoreList() {
+        Mockito.when(repository.load()).thenReturn(new ArrayList<>() {{
+            add(new Chore("Chore #01", Boolean.FALSE, LocalDate.now(), 1L));
+            add(new Chore("Chore #02", Boolean.TRUE, LocalDate.now().minusDays(2), 2L));
+        }});
+        service.loadChores();
+        List<Chore> loadedChores = service.getChores();
+        assertAll(
+                () -> assertEquals(2, loadedChores.size()),
+                () -> assertEquals("Chore #01", loadedChores.get(0).getDescription()),
+                () -> assertEquals(Boolean.FALSE, loadedChores.get(0).getIsCompleted()),
+                () -> assertEquals(LocalDate.now(), loadedChores.get(0).getDeadline()),
+                () -> assertEquals("Chore #02", loadedChores.get(1).getDescription()),
+                () -> assertEquals(Boolean.TRUE, loadedChores.get(1).getIsCompleted()),
+                () -> assertEquals(LocalDate.now().minusDays(2), loadedChores.get(1).getDeadline())
+        );
+    }
+
+    @Test
+    @DisplayName("#loadChores > When no chores are loaded > Update the chore list")
+    void loadChoresWhenNoChoresAreLoadedUpdateTheChoreList() {
+        Mockito.when(repository.load()).thenReturn(new ArrayList<>());
+        service.loadChores();
+        List<Chore> loadChores = service.getChores();
+        assertTrue(loadChores.isEmpty());
     }
 
 }
