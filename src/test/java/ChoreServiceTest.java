@@ -5,6 +5,7 @@ import br.edu.unifalmg.exception.DuplicatedChoreException;
 import br.edu.unifalmg.exception.InvalidDeadlineException;
 import br.edu.unifalmg.exception.InvalidDescriptionException;
 import br.edu.unifalmg.services.ChoreService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -206,7 +207,7 @@ public class ChoreServiceTest {
 
         assertThrows(
                 ChoreDontExistsException.class,
-                () -> service.toggleChore("Chore #1", LocalDate.now().plusDays(1))
+                ()-> service.toggleChore("Chore #1", LocalDate.now().plusDays(1))
         );
     }
 
